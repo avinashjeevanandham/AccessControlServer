@@ -1,4 +1,4 @@
-package one.upswing.acs.model
+package one.upswing.acs.models
 
 data class CardHolderAccountInformation(
     val chAccAgeInd: AccountAgeIndicator,
