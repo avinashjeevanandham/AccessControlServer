@@ -91,15 +91,3 @@ enum class ACSDecoupledConfirmationIndicator(val indicator: String) {
     @JsonProperty("N") NOT_UTILISED("N")
 }
 
-
-
-enum class CardSecurityCodeStatusSource(val source: String){
-    @JsonProperty("01") DS("01"),
-    @JsonProperty("02") ACS("02")
-}
-
-enum class  CardSecurityCodeStatus(val status: String) {
-    @JsonProperty("Y") VALIDATED("Y"),
-    @JsonProperty("N") VALIDATION_FAILED("N"),
-    @JsonProperty("U") UNKNOWN_OR_DOES_NOT_APPLY("U")
-}

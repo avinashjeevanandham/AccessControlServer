@@ -1,6 +1,10 @@
 package one.upswing.acs.models
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import one.upswing.acs.InvalidDataFormatException
+import one.upswing.acs.ReservedRangeException
+import one.upswing.acs.validators.PhoneNumber
 
 enum class MessageType(val type: String) {
     @JsonProperty("AReq") AUTHENTICATION_REQUEST("AReq"),
@@ -59,7 +63,29 @@ data class BroadCastInformation(
 enum class Source(val info: String){
     @JsonProperty("01") THREE_DS_SERVER("01"),
     @JsonProperty("02") DS("02"),
-    @JsonProperty("03") ACS("03")
+    @JsonProperty("03") ACS("03");
+
+    companion object{
+
+        private val errorDetail: String = "Value should be one of ${Source.values().map { it -> it.info }.toString()}"
+        private val enumMap: HashMap<String, Source> = HashMap<String, Source>();
+
+        init {
+            for (item in Source.values()) {
+                enumMap[item.info] = item
+            }
+        }
+        @JsonCreator
+        @JvmStatic
+        fun from(value: String): Source? {
+            val indicatorValue: Int =
+                value.toIntOrNull() ?: throw InvalidDataFormatException("Invalid value", errorDetail)
+            if (indicatorValue in 4..79) throw ReservedRangeException("Reserved for EMVCo future use", errorDetail)
+            if (indicatorValue in 80..99) throw ReservedRangeException("Reserved for DS use", errorDetail)
+            if (indicatorValue > 99) throw InvalidDataFormatException("Invalid value", errorDetail)
+            return enumMap[value]
+        }
+    }
 }
 
 enum class BroadcastInfoCategory(val info: String){
@@ -108,7 +134,29 @@ enum class DeviceBindingStatus(val status: String){
     @JsonProperty("12") BOUND_BY_CARD_HOLDER_EXTERNAL("12"),
     @JsonProperty("13") BOUND_BY_CARD_HOLDER_DYNAMIC("13"),
     @JsonProperty("14") BOUND_BY_CARD_HOLDER_STATIC("14"),
-    @JsonProperty("15") BOUND_BY_CARD_HOLDER_OTHER("15")
+    @JsonProperty("15") BOUND_BY_CARD_HOLDER_OTHER("15");
+
+    companion object{
+
+        private val errorDetail: String = "Value should be one of ${DeviceBindingStatus.values().map { it -> it.status }.toString()}"
+        private val enumMap: HashMap<String, DeviceBindingStatus> = HashMap<String, DeviceBindingStatus>();
+
+        init {
+            for (item in DeviceBindingStatus.values()) {
+                enumMap[item.status] = item
+            }
+        }
+        @JsonCreator
+        @JvmStatic
+        fun from(value: String): DeviceBindingStatus? {
+            val indicatorValue: Int =
+                value.toIntOrNull() ?: throw InvalidDataFormatException("Invalid value", errorDetail)
+            if (indicatorValue in 3..79) throw ReservedRangeException("Reserved for EMVCo future use", errorDetail)
+            if (indicatorValue in 80..99) throw ReservedRangeException("Reserved for DS use", errorDetail)
+            if (indicatorValue > 99) throw InvalidDataFormatException("Invalid value", errorDetail)
+            return enumMap[value]
+        }
+    }
 }
 
 enum class MessageCategory(val category: String) {
@@ -166,4 +214,68 @@ enum class TrustListStatus(val status: String) {
     @JsonProperty("U") UNKNOWN_OR_UNAVAILABLE_DOES_NOT_APPLY("U"),
 }
 
-data class Phone(val cc: String, val subscriber: String)
+enum class CardSecurityCodeStatusSource(val source: String){
+    @JsonProperty("01") DS("01"),
+    @JsonProperty("02") ACS("02");
+
+    companion object{
+
+        private val errorDetail: String = "Value should be one of ${CardSecurityCodeStatusSource.values().map { it -> it.source }.toString()}"
+
+        @JsonCreator
+        @JvmStatic
+        fun from(value: String): CardSecurityCodeStatusSource? {
+            val indicatorValue: Int =
+                value.toIntOrNull() ?: throw InvalidDataFormatException("Invalid value", errorDetail)
+            if (indicatorValue in 3..79) throw ReservedRangeException("Reserved for EMVCo future use", errorDetail)
+            if (indicatorValue in 80..99) throw ReservedRangeException("Reserved for DS use", errorDetail)
+            if (indicatorValue > 99) throw InvalidDataFormatException("Invalid value", errorDetail)
+            if (indicatorValue == 1) return CardSecurityCodeStatusSource.DS
+            if (indicatorValue == 2) return  CardSecurityCodeStatusSource.ACS
+            return null
+        }
+    }
+}
+
+enum class  CardSecurityCodeStatus(val status: String) {
+    @JsonProperty("Y") VALIDATED("Y"),
+    @JsonProperty("N") VALIDATION_FAILED("N"),
+    @JsonProperty("U") UNKNOWN_OR_DOES_NOT_APPLY("U")
+}
+
+@PhoneNumber
+data class Phone(
+    val cc: String,
+    val subscriber: String
+    )
+
+enum class SDKType(val type: String) {
+    @JsonProperty("01") DEFAULT_SDK("01"),
+    @JsonProperty("02") SPLIT_SDK("02"),
+    @JsonProperty("03") LIMITED_SDK("03"),
+    @JsonProperty("04") BROWSER_SDK("04"),
+    @JsonProperty("05") SHELL_SDK("05");
+
+    companion object{
+        private val errorDetail: String = "Value should be one of ${SDKType.values().map { it -> it.type }.toString()}"
+        private val enumMap: HashMap<String, SDKType> = hashMapOf<String, SDKType>();
+
+        init {
+            for (item in SDKType.values()) {
+                enumMap[item.type] = item
+            }
+        }
+
+        @JsonCreator
+        @JvmStatic
+        fun from(value: String): SDKType? {
+            val errorDetail = "Value must be either 01 or 02"
+            val indicatorValue: Int =
+                value.toIntOrNull() ?: throw InvalidDataFormatException(INVALID_VALUE, errorDetail)
+            if (indicatorValue in 3..79) throw ReservedRangeException(RESERVED_EMVCO, errorDetail)
+            if (indicatorValue in 80..99) throw ReservedRangeException(RESERVED_DS, errorDetail)
+            if (indicatorValue > 99) throw InvalidDataFormatException(INVALID_VALUE, errorDetail)
+            return enumMap[value]
+        }
+    }
+}

@@ -10,13 +10,7 @@ data class ThreeDSDeviceAcknowledgementData(
     val sdkType: SDKType,
     val splitSdkServerID: String,
 )
-enum class SDKType(val type: String) {
-    @JsonProperty("01") DEFAULT_SDK("01"),
-    @JsonProperty("02") SPLIT_SDK("02"),
-    @JsonProperty("03") LIMITED_SDK("03"),
-    @JsonProperty("04") BROWSER_SDK("04"),
-    @JsonProperty("05") SHELL_SDK("05")
-}
+
 
 enum class SDKAuthenticationType( val method: String){
     @JsonProperty("01") STATIC_PASSCODE("01"),

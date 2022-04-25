@@ -22,9 +22,16 @@ data class OperationSequence(
     val seqTotal: String
 )
 data class OperationPriorTransactionReference(
-    val transIdType: Source,
+    val transIdType: TransIdType,
     val transId: String
 )
+
+enum class TransIdType(val info: String){
+    @JsonProperty("01") THREE_DS_SERVER("01"),
+    @JsonProperty("02") DS("02"),
+    @JsonProperty("03") ACS("03")
+}
+
 enum class OperationCategory (val category: String) {
     @JsonProperty("01") GENERAL("01"),
     @JsonProperty("02") OPERATIONAL_ALERT("02"),

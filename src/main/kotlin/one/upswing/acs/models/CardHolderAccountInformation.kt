@@ -1,23 +1,32 @@
 package one.upswing.acs.models
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import one.upswing.acs.validators.YYYYMMDD
+import java.util.*
+
 data class CardHolderAccountInformation(
-    val chAccAgeInd: AccountAgeIndicator,
-    val chAccDate: String,
-    val chAccChangeInd: CardHolderAccountChangeIndicator,
-    val chAccChange: String,
-    val chAccPwChangeInd: CardHolderAccountPasswordChangeIndicator,
-    val chAccPwChange: String,
-    val shipAddressUsageInd: ShippingAddressUsageIndicator,
-    val shipAddressUsage: String,
-    val txnActivityDay: String,
-    val txnActivityYear: String,
-    val provisionAttemptsDay: String,
-    val nbPurchaseAccount: String,
-    val suspiciousAccActivity: SuspiciousAccountActivity,
-    val shipNameIndicator: ShippingNameIndicator,
-    val paymentAccInd: AccountAgeIndicator,
-    val paymentAccAge: String
-    ) {}
+    @JsonDeserialize(using = YYYYMMDD::class)
+    val chAccDate: Date?,
+    @JsonDeserialize(using = YYYYMMDD::class)
+    val chAccChange: Date?,
+    @JsonDeserialize(using = YYYYMMDD::class)
+    val chAccPwChange: Date?,
+    @JsonDeserialize(using = YYYYMMDD::class)
+    val shipAddressUsage: Date?,
+    @JsonDeserialize(using = YYYYMMDD::class)
+    val paymentAccAge: Date?,
+    val txnActivityDay: UShort?,
+    val txnActivityYear: UShort?,
+    val provisionAttemptsDay: UShort?,
+    val nbPurchaseAccount: UShort?,
+    val chAccAgeInd: AccountAgeIndicator?,
+    val chAccChangeInd: CardHolderAccountChangeIndicator?,
+    val chAccPwChangeInd: CardHolderAccountPasswordChangeIndicator?,
+    val shipAddressUsageInd: ShippingAddressUsageIndicator?,
+    val suspiciousAccActivity: SuspiciousAccountActivity?,
+    val shipNameIndicator: ShippingNameIndicator?,
+    val paymentAccInd: AccountAgeIndicator?
+    )
 
 
 enum class AccountAgeIndicator(val indicator: String){

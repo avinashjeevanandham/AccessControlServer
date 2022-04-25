@@ -6,7 +6,7 @@ data class ErrorMessage(
     val threeDSServerTransID: String,
     val acsTransID: String,
     val dsTransID: String,
-    val errorCode: ErrorCodes,
+    val errorCode: ErrorCode,
     val errorComponent: ErrorComponent,
     val errorDescription: String,
     val errorDetail: String,
@@ -23,12 +23,13 @@ enum class ErrorComponent(val info: String){
     @JsonProperty("A") ACS("A")
 }
 
-enum class ErrorCodes(val code: String) {
+enum class ErrorCode(val code: String) {
     @JsonProperty("101") MESSAGE_RECEIVED_INVALID("101"),
     @JsonProperty("102") MESSAGE_VERSION_NUMBER_NOT_SUPPORTED("102"),
     @JsonProperty("201") REQUIRED_DATA_ELEMENT_MISSING("201"),
     @JsonProperty("202") CRITICAL_MESSAGE_EXTENSION_NOT_RECOGNISED("202"),
-    @JsonProperty("204") DUPLICATE_DATA_ELEMENT("203"),
+    @JsonProperty("203") INVALID_DATA_FORMAT("203"),
+    @JsonProperty("204") DUPLICATE_DATA_ELEMENT("204"),
     @JsonProperty("207") VALUE_IN_THE_RESERVED_RANGE("207"),
     @JsonProperty("301") TRANSACTION_ID_NOT_RECOGNISED("301"),
     @JsonProperty("302") DATA_DECRYPTION_FAILURE("302"),
